@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+
+{% block content %}
+  {% if messages %}
+    <div class="messages">
+      {% for message in messages %}
+        <div>{{ message.message }}</div>
+      {% endfor %}
+    </div>
+  {% endif %}
+  <h2>ホーム画面</h2>
+  <ul>
+    {% for tag in tags %}
+      <li><a href="{% url 'boards:tagged_ramen_list' tag.slug %}">{{ tag.name }}</a></li>
+    {% endfor %}
+  </ul>
+
+  {# 追加: タグをクリックしたときのリンク #}
+  <h3>ジャンル</h3>
+  <ul>
+    <li><a href="{% url 'boards:tagged_ramen_list' 'shio' %}">しお</a></li>
+    <li><a href="{% url 'boards:tagged_ramen_list' 'shoyu' %}">醤油</a></li>
+    <li><a href="{% url 'boards:tagged_ramen_list' 'tonkotsu' %}">豚骨</a></li>
+    <li><a href="{% url 'boards:tagged_ramen_list' 'miso' %}">味噌</a></li>
+    <li><a href="{% url 'boards:tagged_ramen_list' 'seafood' %}">魚介</a></li>
+    <li><a href="{% url 'boards:tagged_ramen_list' 'mazesoba' %}">混ぜそば</a></li>
+    <li><a href="{% url 'boards:tagged_ramen_list' 'jiro' %}">二郎系</a></li>
+    <li><a href="{% url 'boards:tagged_ramen_list' 'assari' %}">あっさり</a></li>
+    <li><a href="{% url 'boards:tagged_ramen_list' 'kotteri' %}">こってり</a></li>
+    <li><a href="{% url 'boards:tagged_ramen_list' 'favorites' %}">お気に入り</a></li>
+    {# 他のタグに対するリンクも同様に追加する #}
+  </ul>
+{% endblock %}

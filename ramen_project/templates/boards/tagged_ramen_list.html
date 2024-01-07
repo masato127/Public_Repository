@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+
+{% block content %}
+  {% if themes %}
+    <h2>{{ tag.name }} タグの投稿一覧</h2>
+    <ul>
+      {% for theme in themes %}
+        <li>{{ theme.title }}</li>
+        {# 他のテーマの情報も表示できるように拡張 #}
+      {% endfor %}
+    </ul>
+  {% else %}
+    <h2>{{ tag.name }} タグの投稿はありません</h2>
+  {% endif %}
+{% endblock %}

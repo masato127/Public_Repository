@@ -1,0 +1,78 @@
+{% extends "base.html" %}
+{% block content %}
+  <h3>{{theme.title}}</h3>
+  {% for comment in comments %}
+    <div class="comment-container clearfix">
+      <div class="col-1 offset-1">
+        {% if comment.user.picture %}
+          <img style="float:left;" width="50px" height="50px" src="{{ comment.user.picture.url }}">
+        {% endif %}
+      </div>
+      <div class="col-8 offset-2">
+        <p>名前: {{comment.user.username }}</p>
+        <p>{{ comment.comment | linebreaks }}</p>
+      </div>
+      {% if user.is_authenticated %}
+        <div class="col-10 offset-1">
+          <p class="comment-delete-btn">
+            <button class="btn btn-danger small-delete-btn" onclick="delete_comment({{ comment.id }})">削除</button>
+          </p>
+        </div>
+      {% endif %}
+      <div class="col-10 offset-1">
+        <hr>
+      </div>
+    </div>
+  {% endfor %}
+
+  {% if user.is_authenticated %}
+    <div class="col-4 offset-7">
+      <form method="POST">
+        {% csrf_token %}
+        <textarea name="comment" cols="60" rows="5" required="" id="id_comment"></textarea>
+        <br>
+        <input type="button" value="一時保存" id="save_comment">
+        <input type= "submit" value="コメント送信">
+      </form>
+    </div>
+  {% endif %}
+{% endblock %}
+{% block javascript %}
+  <script>
+    $("#save_comment").click(function(){
+        var comment = $("#id_comment").val();
+        var csrf_token = "{{ csrf_token }}";
+        $.ajax({
+            url: "{% url 'boards:save_comment' %}",
+            type: "GET",
+            data: {comment: comment, theme_id: "{{theme.id}}"},
+            dataType: "json",
+            headers: { "X-CSRFToken": csrf_token },
+            success: function(json){
+                if(json.message){
+                    alert(json.message);
+                }
+            }
+        });
+    });
+
+    function delete_comment(commentId) {
+        var csrf_token = "{{ csrf_token }}";
+        $.ajax({
+            url: `/boards/delete_comment/${commentId}/`,
+            type: "POST",
+            headers: { "X-CSRFToken": csrf_token },
+            data: {},
+            dataType: "json",
+            success: function (json) {
+                if (json.message) {
+                    alert(json.message);
+                }
+            },
+            error: function (error) {
+                console.error(error.responseText);
+            }
+        });
+    }
+  </script>
+{% endblock %}

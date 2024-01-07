@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
+  <h3>投稿作成画面</h3>
+
+  {% if create_theme_form.errors %}
+    <div class="alert alert-danger">
+      <strong>Error:</strong> {{ create_theme_form.errors }}
+    </div>
+  {% endif %}
+
+  <form method="post" action="{% url 'boards:create_theme' %}">
+    {% csrf_token %}
+    
+    <!-- 店舗名のフィールド -->
+    <div>
+      {{ create_theme_form.title.label_tag }}
+      {{ create_theme_form.title }}
+    </div>
+
+    <!-- タグフィールドのラベルと選択ウィジェット -->
+    <div>
+      {{ create_theme_form.tags.label_tag }}
+      <div class="tag-checkbox">
+        {% for tag in create_theme_form.tags %}
+          <label>
+            {{ tag }} {{ tag.choice_label }}
+          </label>
+        {% endfor %}
+      </div>
+    </div>
+
+    <input type="submit" value="投稿">
+  </form>
+
+  <link rel="stylesheet" href="{% static 'css/custom.css' %}">
+{% endblock %}

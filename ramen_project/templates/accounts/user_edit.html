@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+{% block content %}
+  {% if messages %}
+    <div class="messages">
+      {% for message in messages %}
+        <div>{{ message.message }}</div>
+      {% endfor %}
+    </div>
+  {% endif %}
+  <form method="POST" enctype="multipart/form-data">
+    {% csrf_token %}
+    {{ user_edit_form.as_p }}
+    <input type="submit" value="更新">
+  </form>
+  <a class="password-change-link" href="{% url 'accounts:change_password' %}">パスワード変更</a>
+{% endblock %}

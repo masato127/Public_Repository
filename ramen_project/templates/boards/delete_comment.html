@@ -1,0 +1,9 @@
+{% extends "base.html" %}
+{% block content %}
+<h3>コメント削除画面</h3>
+<form method="POST">
+{% csrf_token %}
+{{ delete_comment_form.as_p }}
+<input type= "submit" value="削除する">
+</form>
+{% endblock %}

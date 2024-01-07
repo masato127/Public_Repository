@@ -1,0 +1,8 @@
+{% extends "base.html" %}
+{% block content %}
+  <div class="activation-message">
+    ユーザーを有効化しました
+  </div>
+  <p>ログインしてアプリをご利用ください。</p>
+  <a href="{% url 'accounts:user_login' %}">ログイン</a>
+{% endblock %}
