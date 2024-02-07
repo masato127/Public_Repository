@@ -16,6 +16,6 @@ urlpatterns = [
     path('save_comment', views.save_comment, name='save_comment'),
     path('delete_comment/<int:comment_id>/', delete_comment, name='delete_comment'),
     path('', home, name='home'),
-    path('tag/<slug:tag_slug>/', views.tagged_ramen_list, name='tagged_ramen_list'),
+    path('boards/tag/<slug:tag_slug>/', tagged_ramen_list, name='tagged_ramen_list'),
     path('login/', LoginView.as_view(), name='login'),
 ] 

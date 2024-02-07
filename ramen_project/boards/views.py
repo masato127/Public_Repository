@@ -16,26 +16,25 @@ logger = logging.getLogger(__name__)
 
 # Create your views here.
 def create_theme(request):
-    # "しお" タグを含む CreateThemeForm を初期化
     create_theme_form = CreateThemeForm(request.POST or None)
-    
-
 
     if create_theme_form.is_valid():
-        # フォームが有効な場合の処理
-        if request.user and not isinstance(request.user, AnonymousUser):
-            # ユーザーが匿名ユーザーでない場合にのみ Themes.user に代入
+        if request.user.is_authenticated:
             create_theme_form.instance.user = request.user
-            create_theme_form.save()
-            messages.success(request, '掲示板を作成しました。')
+            theme = create_theme_form.save(commit=False)
+            theme.save()
+
+            # タグの保存
+            create_theme_form.save_m2m()
+
+            messages.success(request, '掲示板を作成しました.')
             return redirect('boards:list_themes')
         else:
-            # 匿名ユーザーの場合の処理（例: ログインページへのリダイレクト）
-            messages.warning(request, 'ログインが必要です。')
-            return redirect('boards:login')  # ログインページへのリダイレクトなど
-        
+            messages.warning(request, 'ログインが必要です.')
+            return redirect('boards:login')
+
     logger.debug(f"create_theme_form errors: {create_theme_form.errors}")
-    
+
     return render(
         request, 'boards/create_theme.html', context={'create_theme_form': create_theme_form}
     )

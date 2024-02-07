@@ -9,10 +9,15 @@ class CreateThemeForm(forms.ModelForm):
     AVAILABLE_TAGS = ['しお', '醤油', '豚骨', '味噌', '魚介', '混ぜそば', '二郎系', 'あっさり', 'こってり', 'お気に入り']
 
     tags = forms.ModelMultipleChoiceField(
-        queryset=Tag.objects.filter(name__in=AVAILABLE_TAGS),
+        queryset=Tag.objects.all(),
         widget=forms.CheckboxSelectMultiple(attrs={'class': 'tag-checkbox'}),
-        required=True
+        required=True,
+        initial=Tag.objects.none()  # 修正①
     )
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['tags'].queryset = Tag.objects.filter(name__in=self.AVAILABLE_TAGS)  # 修正②
 
     class Meta:
         model = Themes
