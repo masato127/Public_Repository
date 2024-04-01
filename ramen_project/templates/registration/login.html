@@ -1,0 +1,22 @@
+from django.contrib.auth.views import LoginView
+
+urlpatterns = [
+    path('login/', LoginView.as_view(template_name='your_custom_login_template.html'), name='login'),
+    # other paths...
+]
+
+{% extends "base.html" %}
+
+{% block content %}
+    <h2>ログインが必要です</h2>
+    
+    <!-- ログインフォーム -->
+    <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit">ログイン</button>
+    </form>
+    
+    <!-- ホームへのリンク -->
+    <a href="{% url 'index' %}">ホーム画面に戻る</a>
+{% endblock %}

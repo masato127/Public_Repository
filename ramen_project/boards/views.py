@@ -16,28 +16,23 @@ logger = logging.getLogger(__name__)
 
 # Create your views here.
 def create_theme(request):
-    create_theme_form = CreateThemeForm(request.POST or None)
+    if request.method == 'POST':
+        create_theme_form = CreateThemeForm(request.POST)
+        if create_theme_form.is_valid():
+            if request.user.is_authenticated:
+                create_theme_form.instance.user = request.user
+                theme = create_theme_form.save(commit=False)
+                theme.save()  # データベースに保存
+                create_theme_form.save_m2m()
+                messages.success(request, '掲示板を作成しました.')
+                return redirect('boards:list_themes')
+            else:
+                messages.warning(request, 'ログインが必要です.')
+                return redirect('boards:login')
+    else:
+        create_theme_form = CreateThemeForm()
 
-    if create_theme_form.is_valid():
-        if request.user.is_authenticated:
-            create_theme_form.instance.user = request.user
-            theme = create_theme_form.save(commit=False)
-            theme.save()
-
-            # タグの保存
-            create_theme_form.save_m2m()
-
-            messages.success(request, '掲示板を作成しました.')
-            return redirect('boards:list_themes')
-        else:
-            messages.warning(request, 'ログインが必要です.')
-            return redirect('boards:login')
-
-    logger.debug(f"create_theme_form errors: {create_theme_form.errors}")
-
-    return render(
-        request, 'boards/create_theme.html', context={'create_theme_form': create_theme_form}
-    )
+    return render(request, 'boards/create_theme.html', context={'create_theme_form': create_theme_form})
 
 def list_themes(request):
     themes = Themes.objects.fetch_all_themes()

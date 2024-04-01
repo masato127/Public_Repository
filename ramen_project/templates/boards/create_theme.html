@@ -20,12 +20,12 @@
     </div>
 
     <!-- タグフィールドのラベルと選択ウィジェット -->
-    <div>
+<div>
       {{ create_theme_form.tags.label_tag }}
       <div class="tag-checkbox">
         {% for tag in create_theme_form.tags %}
           <label>
-            {{ tag }} {{ tag.choice_label }}
+            {{ tag }}
           </label>
         {% endfor %}
       </div>
